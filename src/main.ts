@@ -45,13 +45,13 @@ function createListener<T extends Events>(eventName: string) {
   };
 }
 
-export function watchColorScheme(
-  $host: HTMLElement,
+export function watchColorSchemeChange(
+  element: HTMLElement,
   initialScheme: ColorScheme = "default",
 ) {
   function updateTheme(scheme: string) {
-    $host.classList.remove("scheme-default", "scheme-dark", "scheme-light");
-    $host.classList.add(`scheme-${scheme as ColorScheme}`);
+    element.classList.remove("scheme-default", "scheme-dark", "scheme-light");
+    element.classList.add(`scheme-${scheme as ColorScheme}`);
   }
 
   if (initialScheme) {
@@ -66,15 +66,15 @@ export function watchColorScheme(
 }
 
 export function watchThemeChange<T extends string>(
-  $host: HTMLElement,
+  element: HTMLElement,
   themes: T[],
   initialTheme?: T,
 ) {
   const themeClasses = themes.map((theme) => `theme-${theme}`);
 
   function updateTheme(theme: string) {
-    $host.classList.remove(...themeClasses);
-    $host.classList.add(`theme-${theme}`);
+    element.classList.remove(...themeClasses);
+    element.classList.add(`theme-${theme}`);
   }
 
   if (initialTheme) {
