@@ -1,5 +1,8 @@
 # brising
 
+[![JSR](https://jsr.io/badges/@enjikaka/brising)](https://jsr.io/@enjikaka/brising)
+![NPM Version](https://img.shields.io/npm/v/brising)
+
 A small library to handle color scheme and theme changes in you UI-applications.
 
 ## API
