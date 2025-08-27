@@ -2,13 +2,13 @@ import {
   colorSchemeSubscribers,
   type Subscriber,
   themeChangeSubscribers,
-} from "./cache";
+} from "./cache.ts";
 import {
   ColorSchemeChangeEvent,
   type Events,
   ThemeChangeEvent,
-} from "./events";
-import type { ColorScheme } from "./types";
+} from "./events.ts";
+import type { ColorScheme } from "./types.d.ts";
 
 async function createObserver(
   asyncIterator: ReturnType<typeof createListener>,
@@ -48,7 +48,7 @@ function createListener<T extends Events>(eventName: string) {
 export function watchColorSchemeChange(
   element: HTMLElement,
   initialScheme: ColorScheme = "default",
-) {
+): () => void {
   function updateTheme(scheme: string) {
     element.classList.remove("scheme-default", "scheme-dark", "scheme-light");
     element.classList.add(`scheme-${scheme as ColorScheme}`);
@@ -69,7 +69,7 @@ export function watchThemeChange<T extends string>(
   element: HTMLElement,
   themes: T[],
   initialTheme?: T,
-) {
+): () => void {
   const themeClasses = themes.map((theme) => `theme-${theme}`);
 
   function updateTheme(theme: string) {
