@@ -10,6 +10,11 @@ import {
 } from "./events.ts";
 import type { ColorScheme } from "./types.d.ts";
 
+/**
+ * Create an observer that listens for events and updates the subscribers.
+ * @param asyncIterator - The async iterator to listen for.
+ * @param subscribers - The subscribers to update.
+ */
 async function createObserver(
   asyncIterator: ReturnType<typeof createListener>,
   subscribers: Set<Subscriber>,
@@ -21,6 +26,11 @@ async function createObserver(
   }
 }
 
+/**
+ * Create a listener for a specific event.
+ * @param eventName - The name of the event to listen for.
+ * @returns An async iterator that emits the event value.
+ */
 function createListener<T extends Events>(eventName: string) {
   return {
     [Symbol.asyncIterator]() {
@@ -45,6 +55,12 @@ function createListener<T extends Events>(eventName: string) {
   };
 }
 
+/**
+ * Watch for color scheme changes and update the element's class list.
+ * @param element - The element to update.
+ * @param initialScheme - The initial scheme to use.
+ * @returns A function to unsubscribe from the color scheme change event.
+ */
 export function watchColorSchemeChange(
   element: HTMLElement,
   initialScheme: ColorScheme = "default",
@@ -65,6 +81,13 @@ export function watchColorSchemeChange(
   };
 }
 
+/**
+ * Watch for theme changes and update the element's class list.
+ * @param element - The element to update.
+ * @param themes - The themes used in the project.
+ * @param initialTheme - The initial theme to use.
+ * @returns A function to unsubscribe from the theme change event.
+ */
 export function watchThemeChange<T extends string>(
   element: HTMLElement,
   themes: T[],
