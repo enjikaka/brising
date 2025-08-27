@@ -130,3 +130,7 @@ export default registerFunctionComponent(SchemeSelect, {
   metaUrl: import.meta.url,
 });
 ```
+
+## Etymology
+
+The name **Brising** is inspired by Brisingamen, the fabled necklace of the Norse goddess Freyja. As Brisingamen decorated the goddess with beauty and power, this library helps you decorate your application with style and clarity.
