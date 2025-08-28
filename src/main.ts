@@ -1,58 +1,38 @@
-import {
-  colorSchemeSubscribers,
-  type Subscriber,
-  themeChangeSubscribers,
-} from "./cache.ts";
-import {
-  ColorSchemeChangeEvent,
-  type Events,
-  ThemeChangeEvent,
-} from "./events.ts";
+import { colorSchemeSubscribers, themeChangeSubscribers } from "./cache.ts";
+import { ColorSchemeChangeEvent, ThemeChangeEvent } from "./events.ts";
 import type { ColorScheme } from "./types.d.ts";
 
+let isObservingTheme = false;
+let isObservingColorScheme = false;
+
 /**
- * Create an observer that listens for events and updates the subscribers.
- * @param asyncIterator - The async iterator to listen for.
- * @param subscribers - The subscribers to update.
+ * Start observing the color scheme change event.
  */
-async function createObserver(
-  asyncIterator: ReturnType<typeof createListener>,
-  subscribers: Set<Subscriber>,
-) {
-  for await (const value of asyncIterator) {
-    for (const callback of subscribers) {
-      callback(value);
-    }
+export function startObserveringColorScheme() {
+  if (!isObservingColorScheme) {
+    document.addEventListener(ColorSchemeChangeEvent.eventName, (event) => {
+      const colorSchemeEvent = event as ColorSchemeChangeEvent;
+      for (const callback of colorSchemeSubscribers) {
+        callback(colorSchemeEvent.value);
+      }
+    });
+    isObservingColorScheme = true;
   }
 }
 
 /**
- * Create a listener for a specific event.
- * @param eventName - The name of the event to listen for.
- * @returns An async iterator that emits the event value.
+ * Start observing the theme change event.
  */
-function createListener<T extends Events>(eventName: string) {
-  return {
-    [Symbol.asyncIterator]() {
-      return {
-        next() {
-          return new Promise<{ value: string; done: boolean }>((resolve) => {
-            function resolvePromise(e: T) {
-              resolve({ value: e.value, done: false });
-            }
-
-            document.addEventListener(
-              eventName,
-              (event) => resolvePromise(event as T),
-              {
-                once: true,
-              },
-            );
-          });
-        },
-      };
-    },
-  };
+export function startObserveringTheme() {
+  if (!isObservingTheme) {
+    document.addEventListener(ThemeChangeEvent.eventName, (event) => {
+      const themeEvent = event as ThemeChangeEvent;
+      for (const callback of themeChangeSubscribers) {
+        callback(themeEvent.value);
+      }
+    });
+    isObservingTheme = true;
+  }
 }
 
 /**
@@ -65,6 +45,8 @@ export function watchColorSchemeChange(
   element: HTMLElement,
   initialScheme: ColorScheme = "default",
 ): () => void {
+  startObserveringColorScheme();
+
   function updateTheme(scheme: string) {
     element.classList.remove("scheme-default", "scheme-dark", "scheme-light");
     element.classList.add(`scheme-${scheme as ColorScheme}`);
@@ -93,6 +75,8 @@ export function watchThemeChange<T extends string>(
   themes: T[],
   initialTheme?: T,
 ): () => void {
+  startObserveringTheme();
+
   const themeClasses = themes.map((theme) => `theme-${theme}`);
 
   function updateTheme(theme: string) {
@@ -111,17 +95,4 @@ export function watchThemeChange<T extends string>(
   };
 }
 
-// Start listening globally when the library is imported.
-createObserver(
-  createListener(ColorSchemeChangeEvent.eventName),
-  colorSchemeSubscribers,
-);
-createObserver(
-  createListener(ThemeChangeEvent.eventName),
-  themeChangeSubscribers,
-);
-
-export {
-  ColorSchemeChangeEvent,
-  ThemeChangeEvent,
-};
+export { ColorSchemeChangeEvent, ThemeChangeEvent };

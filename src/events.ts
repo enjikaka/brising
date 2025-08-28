@@ -27,5 +27,3 @@ export class ThemeChangeEvent extends Event {
     return this.#theme;
   }
 }
-
-export type Events = ThemeChangeEvent | ColorSchemeChangeEvent;

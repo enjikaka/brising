@@ -1,5 +1,6 @@
 import { expect, suite, test } from "vitest";
-import { watchColorSchemeChange } from "../src/main";
+import { ColorSchemeChangeEvent } from "../src/events.ts";
+import { watchColorSchemeChange } from "../src/main.ts";
 
 suite("watchColorSchemeChange", () => {
   test("adds default scheme to host if no initial scheme is provided", () => {
@@ -12,5 +13,17 @@ suite("watchColorSchemeChange", () => {
     const host = document.createElement("div");
     watchColorSchemeChange(host, "dark");
     expect(host.classList.contains("scheme-dark")).toBe(true);
+  });
+
+  test("updates the scheme class when the event is emitted", () => {
+    const host = document.createElement("div");
+    watchColorSchemeChange(host, "dark");
+
+    expect(host.classList.contains("scheme-dark")).toBe(true);
+
+    // Act - emit the event
+    document.dispatchEvent(new ColorSchemeChangeEvent("light"));
+
+    expect(host.classList.contains("scheme-light")).toBe(true);
   });
 });
