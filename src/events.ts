@@ -8,7 +8,7 @@ export class ColorSchemeChangeEvent extends Event {
     this.#colorScheme = colorScheme;
   }
 
-  get value() {
+  get value(): string {
     return this.#colorScheme;
   }
 }
@@ -23,7 +23,7 @@ export class ThemeChangeEvent extends Event {
     this.#theme = theme;
   }
 
-  get value() {
+  get value(): string {
     return this.#theme;
   }
 }
