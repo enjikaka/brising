@@ -120,3 +120,8 @@ createObserver(
   createListener(ThemeChangeEvent.eventName),
   themeChangeSubscribers,
 );
+
+export {
+  ColorSchemeChangeEvent,
+  ThemeChangeEvent,
+};
